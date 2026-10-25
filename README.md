@@ -62,11 +62,16 @@ assets/img/
 
 ## 3. Estructura
 
-Header fijo → Hero → Te entendemos (objeciones) → Tratamientos → Por qué Dental Dúo → El dúo → Cómo funciona → Obras sociales → Reels de Instagram → Preguntas frecuentes → CTA final → Contacto (datos, mapa y formulario que arma el mensaje de WhatsApp) → Footer + WhatsApp flotante.
+Header fijo → Hero (carteles rotativos sobre la foto) → Te entendemos (en mobile, una tarjeta a la vez con animación pop) → Tratamientos (carrusel: 1 en mobile, 3 en PC) → El dúo → Por qué Dental Dúo → Cómo funciona (3 pasos; pop en mobile) → Obras sociales (buscador + carrusel continuo) → Reels de Instagram → Contacto (datos, mapa estático y formulario que arma el mensaje de WhatsApp) → Footer fusionado con el CTA final → firma + WhatsApp flotante.
+
+La sección de preguntas frecuentes se quitó a pedido (oct. 2026).
 
 ## 4. Datos pendientes [COMPLETAR]
 
-- [ ] **Horarios de atención** (contacto y FAQ).
+- [ ] **Horarios de atención** (contacto).
+- [ ] **Logos de las obras sociales** (ver "Cómo editar"). Mientras tanto, cada tarjeta muestra el nombre.
+- [ ] **Miniaturas de los reels** (ver "Cómo editar").
+- [ ] **Recorte del mapa** (`assets/img/mapa-dental-duo.webp`, 16:9). Mientras tanto se ve una ilustración con el pin y la dirección.
 - [ ] **Matrículas** de ambos profesionales (equipo y footer).
 - [ ] **Bio breve / especialidad** de cada uno.
 - [ ] **Dominio definitivo** (canonical, Open Graph y Schema usan `https://www.dentalduo.com.ar/` como provisorio).
@@ -87,7 +92,10 @@ Header fijo → Hero → Te entendemos (objeciones) → Tratamientos → Por qu�
 - Número de turnos: constante `WA_TURNOS` en `assets/js/main.js` y los `href` con `wa.me/5493794895407`.
 - Mensajes del speech bubble: objeto `BUBBLE_MSGS` en `assets/js/main.js`.
 - Mensajes prellenados: atributo `data-msg` de cada botón.
-- Reels: cambiar el `data-reel="ID"` de cada botón en la sección Instagram.
+- Reels: cambiar el `data-reel="ID"` de cada botón en la sección Instagram. Miniatura: agregar como primer hijo del botón `<img class="reel-thumb" src="assets/img/reels/reel-N.webp" alt="" width="360" height="640" loading="lazy">`.
+- Obras sociales: cada `<li class="os-card" data-os="Nombre">`. El buscador lee `data-os`. Para mostrar el logo, reemplazar el `<span class="os-name">` por `<img src="assets/img/obras-sociales/archivo.webp" alt="Nombre" width="160" height="60" loading="lazy">`.
+- Mapa: reemplazar el `<svg>` dentro de `<a class="map">` por `<img src="assets/img/mapa-dental-duo.webp" alt="" width="1200" height="675" loading="lazy">`.
+- Carteles del hero: lista `.hero-badge` en `index.html` (rotan cada 2,8 s).
 - Colores y tipografías: variables en `:root`.
 
 ---
@@ -103,9 +111,11 @@ Franja "Desarrollado por Tereré Estudio" después del `</footer>` en `index.htm
 Estándar Tereré Estudio: **hosting en Netlify** (HTTPS automático, CDN y protección DDoS básica). Cloudflare no se usa como proxy delante de Netlify.
 
 ### 1. Medidas integradas en el código
-- **CSP estricta** (`_headers`, con respaldo por `<meta>` en cada página): solo recursos propios; `script-src 'self'` sin `unsafe-inline`; `font-src 'self'`; `img-src 'self' data:`; iframes solo de Google Maps e Instagram, y únicamente después de un clic.
+- **CSP estricta** (`_headers`, con respaldo por `<meta>` en cada página): solo recursos propios; `script-src 'self'` sin `unsafe-inline`; `font-src 'self'`; `img-src 'self' data:`; iframes solo de Instagram, y únicamente después de un clic (`frame-src https://www.instagram.com`).
 - **Fuentes locales** en `/fonts` (Fraunces y Figtree, mismos ejes y pesos que antes, woff2, subset latin, `font-display: swap`, licencia OFL incluida). Ya no hay conexión a Google Fonts.
-- **Mapa e Instagram con fachada:** ninguna conexión a Google ni a Meta al abrir la página. El mapa y cada reel se cargan solo al hacer clic, con aviso, y dentro de un iframe con `sandbox`. "Abrir en Google Maps" es un enlace externo.
+- **Mapa estático:** imagen local enlazada a Google Maps; no hay iframe ni conexión a Google al abrir la página.
+- **Instagram con fachada:** cada reel se carga solo al hacer clic, con aviso, dentro de un iframe con `sandbox`.
+- **Buscador de obras sociales:** filtra la lista local; no envía nada. El texto se limpia y se limita a 40 caracteres, y el resultado se arma con `textContent`.
 - **Anti-XSS:** sin `innerHTML`, `eval` ni handlers inline; el JS está en `assets/js/main.js` en modo estricto; los iframes solo aceptan el origen esperado.
 - **Enlaces:** todos los `target="_blank"` con `rel="noopener noreferrer"`; mensajes de WhatsApp con `encodeURIComponent()`.
 - **Formulario:** honeypot, trampa de tiempo (menos de 3 s = bot), largos máximos, limpieza de caracteres de control, consentimiento no premarcado y bloqueo contra doble envío. No envía datos a ningún servidor (arma el mensaje de WhatsApp). La migración a Netlify Forms queda pendiente de aprobación porque cambia textos visibles.
@@ -127,6 +137,6 @@ Estándar Tereré Estudio: **hosting en Netlify** (HTTPS automático, CDN y prot
 
 ### 4. Riesgos residuales (en simple)
 - **WhatsApp y Meta:** las conversaciones de turnos pasan por WhatsApp, que es de un tercero. Conviene no pedir ni recibir estudios o datos clínicos por ese medio.
-- **Mapa y reels:** solo si la persona hace clic, Google o Instagram reciben su IP.
+- **Reels:** solo si la persona hace clic, Instagram recibe su IP. El mapa ya no se conecta con Google salvo que se abra el enlace.
 - **Spam por WhatsApp:** el formulario no pasa por un servidor, así que no hay filtro del lado servidor; un bot podría escribir directo al número. Riesgo bajo, se gestiona desde WhatsApp.
 - **El texto legal es una base:** debe revisarlo un profesional antes de publicar.
