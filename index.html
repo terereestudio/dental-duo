@@ -496,16 +496,81 @@
     /* =========================================================
        15. WHATSAPP FLOTANTE
        ========================================================= */
+    .wa-dock { position: fixed; right: 16px; bottom: 16px; z-index: 90; display: flex; flex-direction: column; align-items: flex-end; gap: 14px; pointer-events: none; }
+    .wa-dock > * { pointer-events: auto; }
+
+    /* Botón: ícono circular con anillo de pulso y punto "en línea" */
     .wa-float {
-      position: fixed; right: 16px; bottom: 16px; z-index: 90;
-      display: inline-flex; align-items: center; gap: var(--sp-2);
-      background: var(--color-whatsapp); color: #fff; text-decoration: none; font-weight: 600;
-      height: 56px; padding: 0 18px 0 16px; border-radius: 999px; box-shadow: 0 10px 28px rgba(30,122,76,.35);
-      transition: transform .25s var(--ease);
+      position: relative; width: 60px; height: 60px; border-radius: 50%;
+      display: grid; place-items: center; text-decoration: none;
+      background: var(--color-whatsapp); color: #fff; box-shadow: 0 10px 28px rgba(30,122,76,.38);
+      transition: transform .3s var(--ease);
     }
-    .wa-float:hover { transform: translateY(-3px); }
-    .wa-float svg { width: 26px; height: 26px; }
-    @media (max-width: 480px) { .wa-float .wa-label { display: none; } .wa-float { width: 56px; padding: 0; justify-content: center; } }
+    .wa-float:hover { transform: scale(1.06); }
+    .wa-float svg { width: 30px; height: 30px; }
+    .wa-float::before {
+      content: ""; position: absolute; inset: 0; border-radius: 50%;
+      border: 2px solid var(--color-whatsapp); animation: wa-pulse 2.6s var(--ease) infinite;
+    }
+    .wa-float .online {
+      position: absolute; top: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%;
+      background: #3DDC84; border: 2.5px solid #fff;
+    }
+    @keyframes wa-pulse { 0% { transform: scale(1); opacity: .55; } 80%, 100% { transform: scale(1.55); opacity: 0; } }
+
+    /* Speech bubble */
+    .bubble {
+      position: relative; width: min(296px, calc(100vw - 32px));
+      background: var(--color-surface); color: var(--color-text);
+      border-radius: 20px 20px 6px 20px; padding: 14px 16px 16px;
+      box-shadow: 0 2px 6px rgba(42,40,36,.06), 0 18px 44px rgba(31,74,84,.18);
+      border: 1px solid rgba(186,175,148,.45);
+      transform-origin: calc(100% - 26px) calc(100% + 14px);
+      opacity: 0; transform: translateY(10px) scale(.85); visibility: hidden;
+      transition: opacity .35s var(--ease), transform .45s cubic-bezier(.34,1.56,.64,1), visibility 0s .45s;
+    }
+    .bubble.is-open { opacity: 1; transform: none; visibility: visible; transition-delay: 0s; }
+    /* Cola SVG apuntando al ícono */
+    .bubble-tail { position: absolute; right: 16px; bottom: -16px; width: 26px; height: 17px; overflow: visible; }
+    .bubble-tail path:first-child { fill: var(--color-surface); }
+    .bubble-tail path:last-child { fill: none; stroke: rgba(186,175,148,.45); stroke-width: 1; }
+
+    .bubble-head { display: flex; align-items: center; gap: 10px; padding-right: 28px; }
+    .bubble-avatar { width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 1px solid rgba(186,175,148,.6); padding: 3px; flex: none; object-fit: contain; }
+    .bubble-name { font-weight: 600; font-size: .9rem; line-height: 1.2; }
+    .bubble-status { font-size: .75rem; color: var(--color-text-muted); display: flex; align-items: center; gap: 5px; }
+    .bubble-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #2FB36A; }
+    .bubble-close {
+      position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; border-radius: 50%;
+      border: 0; background: transparent; color: var(--color-text-muted); cursor: pointer; display: grid; place-items: center;
+    }
+    .bubble-close:hover { background: var(--color-bg); color: var(--color-text); }
+    .bubble-close svg { width: 16px; height: 16px; }
+
+    .bubble-text {
+      margin-top: 10px; padding: 10px 12px; border-radius: 4px 14px 14px 14px;
+      background: var(--color-teal-soft); font-size: .95rem; line-height: 1.45; min-height: 2.9em;
+    }
+    .bubble-cursor { display: inline-block; width: 2px; height: 1.05em; margin-left: 2px; vertical-align: -2px; background: var(--color-primary); animation: blink 1s steps(1) infinite; }
+    .bubble-cursor.is-done { display: none; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Indicador "escribiendo…" */
+    .typing { display: inline-flex; gap: 4px; padding: 6px 2px; }
+    .typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--color-primary); opacity: .4; animation: typing 1.1s infinite; }
+    .typing i:nth-child(2) { animation-delay: .15s; }
+    .typing i:nth-child(3) { animation-delay: .3s; }
+    @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: .35; } 30% { transform: translateY(-5px); opacity: 1; } }
+
+    .bubble-cta {
+      margin-top: 12px; width: 100%; min-height: 44px; font-size: .92rem;
+      opacity: 0; transform: translateY(6px); transition: opacity .35s var(--ease), transform .35s var(--ease), background-color .25s;
+    }
+    .bubble-cta.is-visible { opacity: 1; transform: none; }
+    .bubble-cta svg { transition: transform .25s var(--ease); }
+    .bubble-cta:hover svg { transform: translateX(3px); }
+
+    @media (max-width: 480px) { .wa-dock { right: 12px; bottom: 12px; } .wa-float { width: 56px; height: 56px; } }
 
     /* =========================================================
        16. ANIMACIONES (sutiles, respetan reduced-motion)
@@ -1026,10 +1091,31 @@
     </div>
   </footer>
 
-  <!-- Botón flotante de WhatsApp -->
-  <a class="wa-float js-wa" href="https://wa.me/5493794895407?text=Hola%20Dental%20D%C3%BAo%2C%20quiero%20pedir%20un%20turno." data-msg="Hola Dental Dúo, quiero pedir un turno." target="_blank" rel="noopener" aria-label="Pedí tu turno por WhatsApp">
-    <svg aria-hidden="true"><use href="#i-wa"/></svg><span class="wa-label">Pedí tu turno</span>
-  </a>
+  <!-- WhatsApp flotante + speech bubble animado
+       El mensaje cambia según la sección visible (ver BUBBLE_MSGS en el script). -->
+  <div class="wa-dock">
+    <div class="bubble" id="wa-bubble" role="dialog" aria-labelledby="bubble-name" aria-describedby="bubble-text">
+      <div class="bubble-head">
+        <img class="bubble-avatar" src="assets/img/logo-dental-duo-400.webp" alt="" width="34" height="34">
+        <div>
+          <p class="bubble-name" id="bubble-name">Dental Dúo</p>
+          <p class="bubble-status">En línea ahora</p>
+        </div>
+      </div>
+      <button class="bubble-close" type="button" aria-label="Cerrar mensaje">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <p class="bubble-text" id="bubble-text" aria-live="polite"></p>
+      <a class="btn btn--primary bubble-cta" id="bubble-cta" href="https://wa.me/5493794895407" target="_blank" rel="noopener">
+        <span>Pedí tu turno</span><svg width="18" height="18" aria-hidden="true"><use href="#i-arrow"/></svg>
+      </a>
+      <svg class="bubble-tail" viewBox="0 0 22 14" aria-hidden="true"><path d="M0 0h22v1C17 4 14 9 22 14 9 13 3 7 0 0Z"/><path d="M22 1C17 4 14 9 22 14 9 13 3 7 0 0"/></svg>
+    </div>
+
+    <a class="wa-float js-wa" href="https://wa.me/5493794895407?text=Hola%20Dental%20D%C3%BAo%2C%20quiero%20pedir%20un%20turno." data-msg="Hola Dental Dúo, quiero pedir un turno." target="_blank" rel="noopener" aria-label="Pedí tu turno por WhatsApp">
+      <svg aria-hidden="true"><use href="#i-wa"/></svg><span class="online" aria-hidden="true"></span>
+    </a>
+  </div>
 
   <script>
     /* =========================================================
@@ -1093,6 +1179,100 @@
     });
 
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    /* =========================================================
+       SPEECH BUBBLE DE WHATSAPP
+       - Aparece a los pocos segundos con "escribiendo…" y tipeo.
+       - El mensaje y el CTA cambian según la sección visible.
+       - Se oculta en Contacto (ya está el formulario) y al cerrarlo
+         no vuelve a aparecer en la sesión.
+       ========================================================= */
+    const BUBBLE_MSGS = {
+      default:          { text: "¡Hola! 👋 ¿Coordinamos tu turno? Te respondemos por WhatsApp.", cta: "Pedí tu turno", msg: "Hola Dental Dúo, quiero pedir un turno." },
+      tratamientos:     { text: "¿No sabés qué tratamiento necesitás? Contanos y te orientamos.", cta: "Consultanos", msg: "Hola Dental Dúo, quiero consultar qué tratamiento necesito." },
+      equipo:           { text: "Pablo y Melanie te esperan en Jujuy 731. ¿Reservamos tu lugar?", cta: "Reservá tu turno", msg: "Hola Dental Dúo, quiero reservar un turno." },
+      "obras-sociales": { text: "¿Querés saber si atendemos tu obra social? Te lo confirmamos al toque.", cta: "Consultar mi cobertura", msg: "Hola Dental Dúo, quiero saber si atienden mi obra social: " },
+      preguntas:        { text: "¿Te quedó alguna duda? Escribinos, respondemos todo.", cta: "Hacer una consulta", msg: "Hola Dental Dúo, tengo una consulta: " }
+    };
+    (() => {
+      const bubble = document.getElementById("wa-bubble");
+      const textEl = document.getElementById("bubble-text");
+      const cta = document.getElementById("bubble-cta");
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const store = {
+        get: k => { try { return sessionStorage.getItem(k); } catch (_) { return null; } },
+        set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (_) {} }
+      };
+      let dismissed = store.get("dd-bubble-closed") === "1";
+      let current = null, pending = "default", timers = [], inContact = false, firstRender = true;
+
+      const clear = () => { timers.forEach(clearTimeout); timers = []; };
+      const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+
+      function render(key) {
+        const m = BUBBLE_MSGS[key] || BUBBLE_MSGS.default;
+        if (key === current) return;
+        current = key; clear();
+        cta.classList.remove("is-visible");
+        cta.querySelector("span").textContent = m.cta;
+        cta.href = waLink(WA_TURNOS, m.msg);
+
+        if (reduce) { textEl.textContent = m.text; cta.classList.add("is-visible"); return; }
+
+        textEl.innerHTML = '<span class="typing" aria-label="Escribiendo"><i></i><i></i><i></i></span>';
+        later(() => {
+          const chars = [...m.text]; let i = 0;
+          textEl.innerHTML = '<span class="typed"></span><span class="bubble-cursor" aria-hidden="true"></span>';
+          const typed = textEl.querySelector(".typed"), cursor = textEl.querySelector(".bubble-cursor");
+          const step = () => {
+            typed.textContent = chars.slice(0, ++i).join("");
+            if (i < chars.length) later(step, 26);
+            else { cursor.classList.add("is-done"); later(() => cta.classList.add("is-visible"), 150); }
+          };
+          step();
+        }, firstRender ? 1100 : 600);
+        firstRender = false;
+      }
+
+      const open = () => {
+        if (dismissed || inContact) return;
+        bubble.classList.add("is-open");
+        render(pending);
+      };
+      const hide = () => bubble.classList.remove("is-open");
+
+      bubble.querySelector(".bubble-close").addEventListener("click", () => {
+        dismissed = true; store.set("dd-bubble-closed", "1"); clear(); hide();
+        document.querySelector(".wa-float").focus();
+      });
+      bubble.addEventListener("keydown", e => { if (e.key === "Escape") bubble.querySelector(".bubble-close").click(); });
+
+      // Aparición inicial
+      if (!dismissed) setTimeout(open, reduce ? 1500 : 3500);
+
+      // Mensaje según la sección en el centro de la pantalla
+      if ("IntersectionObserver" in window) {
+        let switchTimer;
+        const sectionIO = new IntersectionObserver(entries => {
+          entries.forEach(en => {
+            if (!en.isIntersecting) return;
+            const id = en.target.id;
+            if (id === "contacto") { inContact = true; hide(); return; }
+            inContact = false;
+            pending = BUBBLE_MSGS[id] ? id : "default";
+            clearTimeout(switchTimer);
+            switchTimer = setTimeout(() => {
+              if (dismissed) return;
+              if (bubble.classList.contains("is-open")) render(pending);
+              else if (current !== null) open();
+            }, 700);
+          });
+        }, { rootMargin: "-45% 0px -45% 0px" });
+        document.querySelectorAll("main > section").forEach(s => {
+          sectionIO.observe(s);
+        });
+      }
+    })();
   </script>
 </body>
 </html>
