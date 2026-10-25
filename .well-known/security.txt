@@ -1,5 +1,5 @@
-# [COMPLETAR: email de contacto de seguridad y dominio definitivo]
-Contact: mailto:[COMPLETAR]
-Expires: 2027-10-25T00:00:00.000Z
+# Contacto de seguridad de Dental Dúo (sitio desarrollado por Tereré Estudio)
+Contact: mailto:[COMPLETAR: email de seguridad de Tereré Estudio]
+Expires: 2027-10-25T03:00:00.000Z
 Preferred-Languages: es, en
-Canonical: https://www.dentalduo.com.ar/.well-known/security.txt
+Canonical: https://[COMPLETAR: dominio definitivo]/.well-known/security.txt

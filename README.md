@@ -2,15 +2,15 @@
 
 Landing de turnos para **Dental Dúo**, consultorio odontológico de la Od. Melanie Leguizamón y el Od. Pablo Sebastián Pintos (Jujuy 731, Corrientes Capital).
 
-Sitio estático sin dependencias ni build: se publica tal cual (Netlify, Cloudflare Pages, hosting compartido). El JavaScript va en un archivo aparte para poder usar una CSP estricta.
+Sitio estático sin dependencias ni build, pensado para Netlify. El JavaScript va en un archivo aparte para poder usar una CSP estricta.
 
 ```
 index.html                 landing
 privacidad.html            Política de privacidad (Ley 25.326)
 404.html                   página de error propia
 assets/js/main.js          interacciones (sin innerHTML, modo estricto)
-.htaccess                  config. Apache: HTTPS, cabeceras, bloqueos
-_headers / _redirects      config. Netlify / Cloudflare Pages
+fonts/                     Fraunces y Figtree en woff2 + licencias OFL
+_headers / _redirects      config. Netlify (cabeceras de seguridad, CSP, redirecciones)
 robots.txt, sitemap.xml, .well-known/security.txt
 favicon.png
 assets/img/
@@ -100,34 +100,33 @@ Franja "Desarrollado por Tereré Estudio" después del `</footer>` en `index.htm
 
 ## Seguridad
 
+Estándar Tereré Estudio: **hosting en Netlify** (HTTPS automático, CDN y protección DDoS básica). Cloudflare no se usa como proxy delante de Netlify.
+
 ### 1. Medidas integradas en el código
-- **CSP estricta** sin `unsafe-inline` en scripts: todo el JS está en `assets/js/main.js`. CSP de respaldo por `<meta>` en cada página.
-- **Anti-XSS:** sin `innerHTML`, `eval` ni handlers inline; los textos se insertan con `textContent` / `createElement`. No se leen parámetros de la URL.
-- **Enlaces:** todos los `target="_blank"` con `rel="noopener noreferrer"`; los mensajes de WhatsApp se arman con `encodeURIComponent()`.
-- **Formulario antibots:** honeypot, trampa de tiempo (menos de 3 s = bot), largos máximos, limpieza de caracteres de control, consentimiento obligatorio no premarcado y botón bloqueado 4 s contra doble envío.
-- **Sin datos en el servidor:** el formulario no envía nada a ningún backend; arma un mensaje que la persona envía desde su WhatsApp. No hay claves, tokens ni emails en el código.
-- **Terceros mínimos:** reels de Instagram con carga al hacer clic (no se conecta con Instagram hasta que la persona lo pide), iframes de mapa y reels con `sandbox`.
-- **Privacidad:** Política de privacidad (Ley 25.326) con la leyenda obligatoria de la AAIP; sin cookies ni analítica; `sessionStorage` solo guarda si se cerró el globo (no datos personales); imágenes sin metadatos EXIF; email no publicado.
-- **Sitio:** página 404 propia, `security.txt`, `robots.txt` sin rutas sensibles.
+- **CSP estricta** (`_headers`, con respaldo por `<meta>` en cada página): solo recursos propios; `script-src 'self'` sin `unsafe-inline`; `font-src 'self'`; `img-src 'self' data:`; iframes solo de Google Maps e Instagram, y únicamente después de un clic.
+- **Fuentes locales** en `/fonts` (Fraunces y Figtree, mismos ejes y pesos que antes, woff2, subset latin, `font-display: swap`, licencia OFL incluida). Ya no hay conexión a Google Fonts.
+- **Mapa e Instagram con fachada:** ninguna conexión a Google ni a Meta al abrir la página. El mapa y cada reel se cargan solo al hacer clic, con aviso, y dentro de un iframe con `sandbox`. "Abrir en Google Maps" es un enlace externo.
+- **Anti-XSS:** sin `innerHTML`, `eval` ni handlers inline; el JS está en `assets/js/main.js` en modo estricto; los iframes solo aceptan el origen esperado.
+- **Enlaces:** todos los `target="_blank"` con `rel="noopener noreferrer"`; mensajes de WhatsApp con `encodeURIComponent()`.
+- **Formulario:** honeypot, trampa de tiempo (menos de 3 s = bot), largos máximos, limpieza de caracteres de control, consentimiento no premarcado y bloqueo contra doble envío. No envía datos a ningún servidor (arma el mensaje de WhatsApp). La migración a Netlify Forms queda pendiente de aprobación porque cambia textos visibles.
+- **Privacidad:** Política de privacidad (Ley 25.326) con la leyenda de la AAIP y mención a WhatsApp (Meta); sin cookies ni analítica; imágenes sin EXIF; email no publicado.
+- **Sitio:** 404 propia, `security.txt`, `robots.txt` sin rutas sensibles, `README.md` bloqueado en `_redirects`.
 
-### 2. Configuración del servidor
-- **Apache / hosting compartido:** `.htaccess` (HTTPS 301, HSTS, CSP, `nosniff`, Referrer-Policy, Permissions-Policy, X-Frame-Options, COOP, sin listado de directorios, bloqueo de archivos ocultos y de desarrollo, cache).
-- **Netlify / Cloudflare Pages:** `_headers` y `_redirects`.
-- Al publicar, **no subir** `.git`, `README.md` ni archivos de trabajo.
+### 2. Configuración del servidor (Netlify)
+- `_headers`: HSTS, CSP, `nosniff`, Referrer-Policy, Permissions-Policy, X-Frame-Options, COOP y cache de fuentes y recursos.
+- `_redirects`: bloqueo de archivos del repo y regla de dominio único lista para activar.
+- En Netlify: activar **Force HTTPS** (Domain management → HTTPS).
 
-### 3. Pendientes del cliente / hosting [COMPLETAR]
-- [ ] Hosting elegido (para dejar solo el archivo de configuración que corresponda).
-- [ ] Dominio definitivo (canonical, OG, sitemap, robots, security.txt).
-- [ ] Datos del responsable en la Política de privacidad (nombre o razón social, CUIT, contacto) y plazo de conservación. **Revisión legal recomendada.**
-- [ ] Email de contacto de seguridad para `security.txt`.
-- [ ] Poner el sitio detrás de **Cloudflare** (plan gratis): WAF, Bot Fight Mode, DDoS, TLS.
-- [ ] Dominio con bloqueo de transferencia, renovación automática y **2FA** en NIC.ar, hosting, Cloudflare, Instagram y WhatsApp Business.
-- [ ] Si usan email del dominio: **SPF, DKIM y DMARC**.
-- [ ] Alojar las tipografías en el sitio (self-hosting) y quitar Google Fonts de la CSP. No se pudieron descargar desde el entorno de desarrollo.
+### 3. Pendientes [COMPLETAR]
+- [ ] Dominio definitivo (canonical, OG, Schema, sitemap, robots, `_redirects`, `security.txt`).
+- [ ] Datos del responsable para la Política de privacidad: nombre o razón social, CUIT, domicilio y email de contacto para datos personales.
+- [ ] Revisión legal recomendada de la Política de privacidad.
+- [ ] Email de seguridad de Tereré Estudio para `security.txt` (se completa una única vez).
 - [ ] Después de publicar: verificar en **securityheaders.com**, **SSL Labs** y **Mozilla Observatory** (objetivo: nota A) y revisar la consola sin errores de CSP.
+- Recomendado al cliente: 2FA y bloqueo de transferencia del dominio en NIC.ar, 2FA en Netlify, Instagram y WhatsApp Business; SPF, DKIM y DMARC si usan email del dominio.
 
 ### 4. Riesgos residuales (en simple)
 - **WhatsApp y Meta:** las conversaciones de turnos pasan por WhatsApp, que es de un tercero. Conviene no pedir ni recibir estudios o datos clínicos por ese medio.
-- **Mapa, reels y tipografías:** al cargarse, Google e Instagram reciben la IP de quien visita. Los reels solo se cargan si la persona hace clic.
-- **Spam por WhatsApp:** como el formulario no pasa por un servidor, no hay CAPTCHA ni límite por IP; un bot podría escribir directo al número. El riesgo es bajo y se gestiona desde WhatsApp (bloquear y reportar).
+- **Mapa y reels:** solo si la persona hace clic, Google o Instagram reciben su IP.
+- **Spam por WhatsApp:** el formulario no pasa por un servidor, así que no hay filtro del lado servidor; un bot podría escribir directo al número. Riesgo bajo, se gestiona desde WhatsApp.
 - **El texto legal es una base:** debe revisarlo un profesional antes de publicar.

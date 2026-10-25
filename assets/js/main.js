@@ -68,6 +68,24 @@
     });
   });
 
+  /* ---------- Mapa: carga al hacer clic (fachada sin rastreo) ----------
+     No se conecta con Google hasta que la persona elige ver el mapa. */
+  const mapBtn = document.querySelector(".map-load");
+  if (mapBtn) {
+    mapBtn.addEventListener("click", () => {
+      const src = mapBtn.dataset.mapSrc || "";
+      if (!/^https:\/\/maps\.google\.com\/maps\?/.test(src)) return; // solo el origen esperado
+      const iframe = document.createElement("iframe");
+      iframe.src = src;
+      iframe.title = mapBtn.dataset.mapTitle || "Mapa";
+      iframe.setAttribute("referrerpolicy", "no-referrer-when-downgrade");
+      iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox");
+      const facade = mapBtn.closest(".map-facade");
+      facade.replaceWith(iframe);
+      iframe.focus();
+    });
+  }
+
   /* ---------- Formulario → WhatsApp (con capas antibots) ----------
      1) Honeypot  2) Trampa de tiempo (< 3 s)  3) Validación y largo máximo
      4) Consentimiento  5) Botón bloqueado unos segundos (anti doble envío)

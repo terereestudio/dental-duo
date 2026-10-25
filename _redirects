@@ -1,8 +1,12 @@
-# Dental Dúo — Netlify / Cloudflare Pages
-# HTTPS y certificado: se activan solos en estos hostings ("Force HTTPS").
-# [COMPLETAR: dominio definitivo] Unificar en una sola versión del dominio:
+# =========================================================
+# Dental Dúo — redirecciones (Netlify)
+# http → https: automático en Netlify (activar "Force HTTPS" en Domain management).
+# La página 404.html se sirve sola para rutas inexistentes.
+# =========================================================
+
+# [COMPLETAR: dominio definitivo] Unificar en una sola versión del dominio, por ejemplo:
 # https://dentalduo.com.ar/*  https://www.dentalduo.com.ar/:splat  301!
 
-# Bloquear archivos que no deben publicarse
-/README.md   /404.html   404
-/.git/*      /404.html   404
+# Archivos del repositorio que no deben quedar públicos
+/README.md    /404.html   404!
+/README.md/*  /404.html   404!
