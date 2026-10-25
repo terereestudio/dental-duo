@@ -228,14 +228,19 @@
     .brand { display: flex; align-items: center; flex: none; gap: 8px; }
     .brand img { height: 54px; width: auto; }
     .brand .brand-wordmark { height: 31px; margin-top: 6px; }
-    @media (max-width: 420px) {
+    @media (max-width: 767px) {
       .brand img { height: 46px; }
-      .brand .brand-wordmark { height: 24px; margin-top: 4px; }
+      .brand .brand-wordmark { height: 26px; margin-top: 5px; }
+      .header-cta { display: none; }
     }
-    @media (max-width: 380px) {
+    @media (max-width: 420px) {
       .brand { gap: 6px; }
       .brand img { height: 40px; }
-      .brand .brand-wordmark { height: 21px; }
+      .brand .brand-wordmark { height: 22px; margin-top: 4px; }
+    }
+    @media (max-width: 380px) {
+      .brand img { height: 36px; }
+      .brand .brand-wordmark { height: 20px; }
     }
     .nav { display: none; }
     .nav ul { display: flex; gap: var(--sp-5); }
