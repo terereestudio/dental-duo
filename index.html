@@ -223,7 +223,19 @@
     .site-header.is-scrolled { border-bottom-color: rgba(186,175,148,.35); box-shadow: 0 4px 20px rgba(42,40,36,.05); }
     .header-inner { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); }
     .brand { display: flex; align-items: center; flex: none; }
+    .brand { gap: 8px; }
     .brand img { height: 60px; width: auto; }
+    .brand .brand-wordmark { height: 34px; margin-top: 6px; }
+    @media (max-width: 420px) {
+      .brand img { height: 46px; }
+      .brand .brand-wordmark { height: 24px; margin-top: 4px; }
+    }
+    @media (max-width: 380px) {
+      .brand { gap: 6px; }
+      .brand img { height: 40px; }
+      .brand .brand-wordmark { height: 21px; }
+    }
+    .header-cta { white-space: nowrap; }
     .nav { display: none; }
     .nav ul { display: flex; gap: var(--sp-5); }
     .nav a { color: var(--color-text); text-decoration: none; font-weight: 500; font-size: var(--fs-sm); padding: var(--sp-2) 0; position: relative; }
@@ -514,8 +526,9 @@
        ========================================================= */
     .site-footer { background: var(--color-text); color: #D8D2C6; padding-block: var(--sp-8) var(--sp-6); font-size: var(--fs-sm); }
     .footer-grid { display: grid; gap: var(--sp-6); }
-    .footer-logo { background: #fff; border-radius: var(--radius-md); padding: var(--sp-3); display: inline-block; }
+    .footer-logo { background: #fff; border-radius: var(--radius-md); padding: var(--sp-3); display: inline-flex; align-items: center; gap: var(--sp-2); }
     .footer-logo img { height: 84px; width: auto; }
+    .footer-logo .brand-wordmark { height: 40px; }
     .site-footer h3 { color: #fff; font-family: var(--font-body); font-size: var(--fs-sm); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: var(--sp-3); }
     .site-footer a { color: #F1E8DC; }
     .site-footer li + li { margin-top: var(--sp-2); }
@@ -683,6 +696,7 @@
     <div class="container header-inner">
       <a class="brand" href="#top" aria-label="Dental Dúo, volver al inicio">
         <img src="assets/img/logo-dental-duo-400.webp" alt="Dental Dúo" width="400" height="430">
+        <img class="brand-wordmark" src="assets/img/wordmark-dental-duo.webp" alt="" width="600" height="159">
       </a>
       <nav class="nav" aria-label="Principal">
         <ul>
@@ -1139,7 +1153,7 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <span class="footer-logo"><img src="assets/img/logo-dental-duo-400.webp" alt="Dental Dúo" width="400" height="430" loading="lazy"></span>
+          <span class="footer-logo"><img src="assets/img/logo-dental-duo-400.webp" alt="Dental Dúo" width="400" height="430" loading="lazy"><img class="brand-wordmark" src="assets/img/wordmark-dental-duo.webp" alt="" width="600" height="159" loading="lazy"></span>
           <p style="margin-top: var(--sp-4); max-width: 30ch;">Odontología integral en Corrientes Capital. Estamos para cuidarte.</p>
         </div>
         <div>
