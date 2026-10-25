@@ -1,0 +1,8 @@
+# Dental Dúo — Netlify / Cloudflare Pages
+# HTTPS y certificado: se activan solos en estos hostings ("Force HTTPS").
+# [COMPLETAR: dominio definitivo] Unificar en una sola versión del dominio:
+# https://dentalduo.com.ar/*  https://www.dentalduo.com.ar/:splat  301!
+
+# Bloquear archivos que no deben publicarse
+/README.md   /404.html   404
+/.git/*      /404.html   404

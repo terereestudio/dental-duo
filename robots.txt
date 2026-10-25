@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# [COMPLETAR: dominio definitivo]
+Sitemap: https://www.dentalduo.com.ar/sitemap.xml
