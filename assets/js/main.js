@@ -60,6 +60,9 @@
       iframe.src = `https://www.instagram.com/reel/${id}/embed/`;
       iframe.title = btn.dataset.title || "Reel de Instagram de Dental Dúo";
       iframe.loading = "lazy";
+      iframe.width = "360";
+      iframe.height = "640";
+      iframe.decoding = "async";
       iframe.setAttribute("allowfullscreen", "");
       iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
       iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-presentation");

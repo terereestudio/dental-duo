@@ -14,13 +14,16 @@ _headers / _redirects      config. Netlify (cabeceras de seguridad, CSP, redirec
 robots.txt, sitemap.xml, .well-known/security.txt
 favicon.png
 assets/img/
-  firma-terereestudio.webp   firma "Desarrollado por Tereré Estudio"
-  logo-dental-duo-400.webp    logo para header y footer
-  logo-dental-duo.png         logo en alta (fallback / descargas)
-  equipo-dental-duo-800.webp  foto del dúo
-  equipo-dental-duo.jpg       foto original optimizada
-  og-dental-duo.jpg           imagen para compartir (1200×630)
-  apple-touch-icon.png
+  firma-terereestudio.webp      firma "Desarrollado por Tereré Estudio" (360×120)
+  logo-dental-duo-nuevo.webp    logo del header (diente nuevo, transparente)
+  logo-dental-duo-400.webp      logo del speech bubble y del 404
+  logo-dental-duo.webp          logo para datos estructurados (Schema.org)
+  wordmark-dental-duo.webp      "Dental Dúo" en cursiva (header)
+  wordmark-dental-duo-blanco.webp  mismo texto en blanco (footer)
+  equipo-dental-duo-800.webp    foto del dúo (hero y sección El dúo)
+  reels/reel-1..4.webp          miniaturas de reels (360×640)
+  og-dental-duo.jpg             imagen para compartir (1200×630); JPG por compatibilidad
+  apple-touch-icon.png          PNG obligatorio para iOS
 ```
 
 ---
